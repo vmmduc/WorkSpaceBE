@@ -4,6 +4,7 @@ using Common.Constant;
 using Common.Extentions;
 using Common.HttpContextAccessor;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Models.Models;
 using Models.Objects.Friend;
 using Models.Objects.Friends;

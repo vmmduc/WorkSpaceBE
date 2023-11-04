@@ -3,6 +3,7 @@ using Common.Base;
 using Common.Extentions;
 using Common.HttpContextAccessor;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Models.Models;
 using Models.Objects.Friends;
 
@@ -51,7 +52,5 @@ namespace ChatApp.Dal.Repositories
             dataList = dataList.OrderByDescending(x => x.StateCode).ThenByDescending(x => x.FULL_NAME).ToList();
             return new BaseResult<FriendObj> { rtList = dataList, rtCode = 0 };
         }
-    
-        
     }
 }

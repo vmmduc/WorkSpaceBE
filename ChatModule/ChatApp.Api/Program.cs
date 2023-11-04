@@ -58,13 +58,7 @@ builder.Services.AddPolicy();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy(
-        name: "AllowOrigin",
-        policy =>
-        {
-            policy.WithOrigins("http://localhost:5156", "https://localhost:5156", "http://localhost:4200", "https://localhost:4200");
-            policy.AllowAnyHeader().AllowAnyMethod().AllowCredentials();
-        });
+    options.AddPolicy("AllowOrigin", opt => opt.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 });
 
 builder.Services.AddHttpContextAccessor();
@@ -98,6 +92,8 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
+
+app.UseRouting();
 
 app.UseCors("AllowOrigin");
 
