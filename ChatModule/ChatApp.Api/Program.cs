@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Http.Connections;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -52,14 +53,20 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddSignalR();
-
 builder.Services.AddPolicy();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowOrigin", opt => opt.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+    options.AddPolicy("AllowAllOrigin", opt =>
+    {
+        opt.AllowCredentials()
+           .AllowAnyHeader()
+           .SetIsOriginAllowed(origin => true)
+           .AllowCredentials();
+    });
 });
+
+builder.Services.AddSignalR();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -70,6 +77,7 @@ builder.Services.AddDbContext<DatabaseContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseContext"));
 });
+
 // Config json
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
 {
@@ -95,13 +103,16 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 
 app.UseRouting();
 
-app.UseCors("AllowOrigin");
+app.UseCors("AllowAllOrigin");
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
-app.MapHub<ChatHub>("/Chat");
+app.MapHub<ChatHub>("/Chat", opt =>
+{
+    opt.Transports = HttpTransportType.WebSockets | HttpTransportType.LongPolling;
+}).RequireCors("AllowAllOrigin");
 
 app.MapControllers();
 
