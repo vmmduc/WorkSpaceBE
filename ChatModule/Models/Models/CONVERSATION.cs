@@ -7,6 +7,7 @@ namespace Models.Models
         [Key]
         public int PK_CONVERSATION_ID { get; set; }
         public string? CONVERSATION_NAME { get; set; }
+        public DateTime? LAST_UPDATED_DATE { get; set; }
         public bool? IS_GROUP { get; set; }
     }
 }

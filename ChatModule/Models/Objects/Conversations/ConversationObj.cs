@@ -8,6 +8,7 @@
         public string? displayName { get; set; }
         public int? unreadMessageCount { get; set; }
         public List<MessageObj> lsMessage { get; set; } = new List<MessageObj>();
+        public DateTime? lastUpdatedDate { get; set; }
         public List<ConversationMemberObj> conversationMembers { get; set; } = new List<ConversationMemberObj>();
     }
 }

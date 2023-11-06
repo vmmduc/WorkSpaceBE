@@ -53,9 +53,10 @@ namespace ChatApp.Dal.Repositories
                                                       createdDate = y.message.CREATED_DATE
                                                   }).FirstOrDefault(),
                                  unreadMessageCount = x.conv_mem.UNREAD_COUNT ?? 0,
+                                 lastUpdatedDate = x.conv.LAST_UPDATED_DATE
                              }).ToListAsync();
             if (dataList.Count > 0)
-                dataList = dataList.OrderByDescending(x => x.message!.createdDate).ToList();
+                dataList = dataList.OrderByDescending(x => x.lastUpdatedDate).ToList();
             return new BaseResult<ConversationObj>(dataList, true, 0);
         }
 
@@ -134,6 +135,9 @@ namespace ChatApp.Dal.Repositories
             };
 
             await _context.LS_MESSAGES.AddAsync(message);
+            await _context.SaveChangesAsync();
+
+            conv.LAST_UPDATED_DATE = DateTime.Now;
             await _context.SaveChangesAsync();
 
             // Cập nhật tin nhắn chưa đọc cho user
