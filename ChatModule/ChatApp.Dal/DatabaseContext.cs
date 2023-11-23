@@ -21,7 +21,7 @@ namespace Models.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Data Source=localhost;Initial Catalog=WorkSpace;Persist Security Info=True;User ID=sa;Password=sql@123456;TrustServerCertificate=True;");
+                optionsBuilder.UseSqlServer("Data Source=125.212.231.206;Initial Catalog=WorkSpace;Persist Security Info=True;User ID=sa;Password=sql@123456;TrustServerCertificate=True;");
             }
         }
 
