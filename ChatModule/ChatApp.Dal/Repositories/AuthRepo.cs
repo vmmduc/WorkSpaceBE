@@ -38,5 +38,18 @@ namespace ChatApp.Dal.Repositories
             if (result == null) return new BaseResult<UserObj> { rtMessage = "Email hoặc mật khẩu không đúng", rtStatus = false, rtCode = -1 };
             return new BaseResult<UserObj> { rtResult = result, rtStatus = true, rtCode = 0 };
         }
+
+        public async Task CreateRefreshToken(RefreshTokenObj param)
+        {
+            await _context.LS_USER_TOKEN.AddAsync(new USER_TOKEN
+            {
+                FK_USER_ID = param.UserId,
+                REFRESH_TOKEN = param.RefreshToken,
+                CREATED_DATE = DateTime.Now,
+                EXPIRES_TIME = param.ExpiresTime,
+                IS_REVOKED = false
+            });
+            await _context.SaveChangesAsync();
+        }
     }
 }

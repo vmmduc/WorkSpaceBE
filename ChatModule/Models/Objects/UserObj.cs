@@ -9,5 +9,6 @@
         public bool? deactivate { get; set; }
         public List<RoleObj>? lsRoles { get; set; }
         public string? token { get; set; }
+        public string? refreshToken { get; set; }
     }
 }

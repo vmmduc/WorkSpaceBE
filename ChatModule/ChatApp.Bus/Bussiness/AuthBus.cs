@@ -2,6 +2,7 @@
 using ChatApp.Dal.Interfaces;
 using Common.Base;
 using Common.Token;
+using Microsoft.Extensions.Configuration;
 using Models.Objects;
 using System.Security.Claims;
 
@@ -11,10 +12,13 @@ namespace ChatApp.Bus.Bussiness
     {
         private readonly IAuthRepo _auth;
         private readonly ITokenService _token;
-        public AuthBus(IAuthRepo auth, ITokenService token)
+
+        private readonly IConfiguration _config;
+        public AuthBus(IAuthRepo auth, ITokenService token, IConfiguration config)
         {
             _auth = auth;
             _token = token;
+            _config = config;
         }
 
         public async Task<BaseResult<UserObj>> Login(BaseRequest<LoginObj> param)
@@ -33,6 +37,15 @@ namespace ChatApp.Bus.Bussiness
 
                     var token = _token.GenerateAccessToken(claims);
                     result.rtResult!.token = token;
+
+                    var refreshToken = _token.GenerateRefreshToken();
+                    await _auth.CreateRefreshToken(new RefreshTokenObj
+                    {
+                        UserId = result.rtResult.userId,
+                        RefreshToken = refreshToken,
+                        ExpiresTime = DateTime.Now.AddDays(int.Parse(_config["Jwt:RefreshTokenExpirationInDays"] ?? ""))
+                    });
+                    result.rtResult.refreshToken = refreshToken;
                 }
                 return result;
             }
